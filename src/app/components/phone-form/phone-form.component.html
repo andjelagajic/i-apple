@@ -1,0 +1,30 @@
+<form [formGroup]="this.phoneForm" (ngSubmit)="this.onSubmit()">
+  <div class="mb-3">
+    <label for="title" class="form-label">Title</label>
+    <input
+      type="text"
+      id="title"
+      class="form-control"
+      formControlName="title"
+    />
+  </div>
+  <div class="mb-3">
+    <label for="price" class="form-label">Price</label>
+    <input
+      type="number"
+      id="price"
+      class="form-control"
+      formControlName="price"
+    />
+  </div>
+  <div class="mb-3">
+    <label for="numberInStock" class="form-label">In Stock</label>
+    <input
+      type="number"
+      id="numberInStock"
+      class="form-control"
+      formControlName="numberInStock"
+    />
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
