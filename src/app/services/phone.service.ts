@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { of } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { Phone } from '../models/phone';
 
 @Injectable({
@@ -7,6 +7,18 @@ import { Phone } from '../models/phone';
 })
 export class PhoneService {
   private phones: Phone[] = [];
+
+  private phoneSource = new BehaviorSubject<Phone>({
+    id: null,
+    title: null,
+    image: null,
+    price: null,
+    numberInStock: null,
+  });
+  selectedPhone = this.phoneSource.asObservable();
+
+  private stateSource = new BehaviorSubject<boolean>(true);
+  stateClear = this.stateSource.asObservable();
 
   constructor() {
     const phone1: Phone = {
@@ -40,7 +52,55 @@ export class PhoneService {
     return of(this.phones);
   }
 
+  getNextId() {
+    return Math.max.apply(
+      Math,
+      this.phones.map((phone) => {
+        return phone.id;
+      })
+    );
+  }
+
   addPhone(phone: Phone) {
     this.phones.unshift(phone);
+  }
+
+  deletePhone(phone: Phone) {
+    this.phones.forEach((curr, i) => {
+      if (phone.id === curr.id) {
+        this.phones.splice(i, 1);
+      }
+    });
+  }
+
+  updatePhone(phone: Phone) {
+    this.phones.forEach((curr, i) => {
+      if (phone.id === curr.id) {
+        this.phones.splice(i, 1, phone);
+      }
+    });
+    // this.phones.unshift(phone);
+  }
+
+  setFormPhone(phone: Phone) {
+    this.phoneSource.next(phone);
+  }
+
+  clearState() {
+    this.stateSource.next(true);
+  }
+
+  initState() {
+    this.phoneSource = new BehaviorSubject<Phone>({
+      id: null,
+      title: null,
+      image: null,
+      price: null,
+      numberInStock: null,
+    });
+    this.selectedPhone = this.phoneSource.asObservable();
+
+    this.stateSource = new BehaviorSubject<boolean>(true);
+    this.stateClear = this.stateSource.asObservable();
   }
 }

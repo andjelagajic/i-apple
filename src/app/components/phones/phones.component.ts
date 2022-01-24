@@ -11,14 +11,56 @@ export class PhonesComponent implements OnInit {
 
   searchValue: string; // for search [(ngModel)]
 
+  selectedPhone: Phone = {};
+
   constructor(private phoneService: PhoneService) {}
 
   ngOnInit(): void {
+    // Subscribe to stateClear
+    this.phoneService.stateClear.subscribe((clear) => {
+      if (clear) {
+        this.selectedPhone = {
+          id: null,
+          title: null,
+          image: null,
+          price: null,
+          numberInStock: null,
+        };
+      }
+    });
+
     // Set phones to local array
     this.phoneService.getPhones().subscribe((phones) => (this.phones = phones));
   }
 
   onAddPhone(phone: Phone) {
     this.phoneService.addPhone(phone);
+
+    const old = this.searchValue;
+    this.searchValue = '';
+    setTimeout(() => {
+      this.searchValue = old;
+    }, 1);
+  }
+
+  onDeletePhone(phone: Phone) {
+    if (window.confirm('Da li ste sigurni?')) {
+      this.searchValue = '';
+      this.phoneService.deletePhone(phone);
+    }
+  }
+
+  onSelect(phone: Phone) {
+    this.phoneService.setFormPhone(phone);
+    this.selectedPhone = phone;
+  }
+
+  onUpdatePhone(phone: Phone) {
+    this.phoneService.updatePhone(phone);
+    const old = this.searchValue;
+    this.searchValue = '';
+    setTimeout(() => {
+      this.searchValue = old;
+    }, 1);
   }
 }

@@ -1,5 +1,7 @@
 <form [formGroup]="this.phoneForm" (ngSubmit)="this.onSubmit()">
   <div class="mb-3">
+    <input type="hidden" formControlName="id" />
+    <input type="hidden" formControlName="image" />
     <label for="title" class="form-label">Title</label>
     <input
       type="text"
@@ -26,5 +28,13 @@
       formControlName="numberInStock"
     />
   </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
+  <button *ngIf="this.add" type="submit" class="btn btn-primary me-3">
+    Add New Phone
+  </button>
+  <button *ngIf="!this.add" type="submit" class="btn btn-warning me-3">
+    Update Phone
+  </button>
+  <button (click)="this.clearState()" type="button" class="btn btn-dark">
+    Clear
+  </button>
 </form>
