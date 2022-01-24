@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Phone } from 'src/app/models/phone';
 import { PhoneService } from 'src/app/services/phone.service';
 
@@ -8,13 +8,7 @@ import { PhoneService } from 'src/app/services/phone.service';
   templateUrl: './phone-form.component.html',
 })
 export class PhoneFormComponent implements OnInit {
-  phoneForm = this.formBuilder.group({
-    id: '',
-    title: '',
-    image: '',
-    price: '',
-    numberInStock: '',
-  });
+  phoneForm: FormGroup;
 
   add: boolean = true;
 
@@ -28,10 +22,11 @@ export class PhoneFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Init form group
+    this.initMyValidation();
+
     // Subscribe to the selected phone observable
     this.phoneService.selectedPhone.subscribe((phone) => {
-      console.log('p', phone);
-
       if (phone.id != null) {
         this.add = false;
 
@@ -54,7 +49,7 @@ export class PhoneFormComponent implements OnInit {
         id: this.phoneService.getNextId() + 1,
         title,
         image: `assets/img/${randomImageNumber}.jpg`,
-        price,
+        price: +price,
         numberInStock,
       };
 
@@ -66,7 +61,7 @@ export class PhoneFormComponent implements OnInit {
         id,
         title,
         image,
-        price,
+        price: +price,
         numberInStock,
       };
 
@@ -89,6 +84,89 @@ export class PhoneFormComponent implements OnInit {
 
     this.phoneService.clearState();
 
+    this.initMyValidation();
+
     // this.phoneService.initState();
+  }
+
+  initMyValidation() {
+    this.phoneForm = this.formBuilder.group({
+      id: '',
+      title: ['', [Validators.required, Validators.minLength(1)]],
+      image: '',
+      price: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/^\d+$/),
+          Validators.minLength(3),
+        ],
+      ],
+      numberInStock: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/^\d+$/),
+          Validators.minLength(1),
+        ],
+      ],
+    });
+  }
+
+  validateTitle() {
+    const input = this.phoneForm.get('title');
+
+    return (
+      ((input.touched || input.dirty) && input.hasError('required')
+        ? 'is-invalid'
+        : '') ||
+      ((input.touched || input.dirty) && input.hasError('minlength')
+        ? 'is-invalid'
+        : '') ||
+      ((input.touched || input.dirty) && input.valid ? 'is-valid' : '')
+    );
+  }
+
+  validatePrice() {
+    const input = this.phoneForm.get('price');
+
+    return (
+      ((input.touched || input.dirty) && input.hasError('required')
+        ? 'is-invalid'
+        : '') ||
+      ((input.touched || input.dirty) && input.hasError('minlength')
+        ? 'is-invalid'
+        : '') ||
+      ((input.touched || input.dirty) && input.hasError('pattern')
+        ? 'is-invalid'
+        : '') ||
+      ((input.touched || input.dirty) && input.valid ? 'is-valid' : '')
+    );
+  }
+
+  validateInStock() {
+    const input = this.phoneForm.get('numberInStock');
+
+    return (
+      ((input.touched || input.dirty) && input.hasError('required')
+        ? 'is-invalid'
+        : '') ||
+      ((input.touched || input.dirty) && input.hasError('minlength')
+        ? 'is-invalid'
+        : '') ||
+      ((input.touched || input.dirty) && input.hasError('pattern')
+        ? 'is-invalid'
+        : '') ||
+      ((input.touched || input.dirty) && input.valid ? 'is-valid' : '')
+    );
+  }
+
+  notValidPrice() {
+    if (this.phoneForm.get('price').hasError('minlength')) {
+      console.log('Price ne moze biti manji od 3 karaktera.');
+      return 'Min length is 3';
+    } else {
+      return '';
+    }
   }
 }
