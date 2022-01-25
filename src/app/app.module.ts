@@ -6,11 +6,12 @@ import { PhonesComponent } from './components/phones/phones.component';
 import { PhoneFormComponent } from './components/phone-form/phone-form.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FilterPipe } from './helpers/filter.pipe';
+import { appStoreProviders } from './app.store';
 
 @NgModule({
   declarations: [AppComponent, PhonesComponent, PhoneFormComponent, FilterPipe],
   imports: [BrowserModule, FormsModule, ReactiveFormsModule],
-  providers: [],
+  providers: [appStoreProviders],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

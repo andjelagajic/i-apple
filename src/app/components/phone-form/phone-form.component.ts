@@ -1,14 +1,38 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Store } from 'redux';
+import { AppState } from 'src/app/app.state';
+import { AppStore } from 'src/app/app.store';
 import { Phone } from 'src/app/models/phone';
 import { PhoneService } from 'src/app/services/phone.service';
+import * as CounterActions from '../../counter.actions';
 
 @Component({
   selector: 'app-phone-form',
   templateUrl: './phone-form.component.html',
 })
 export class PhoneFormComponent implements OnInit {
-  phoneForm: FormGroup;
+  phoneForm: FormGroup = this.formBuilder.group({
+    id: '',
+    title: ['', [Validators.required, Validators.minLength(1)]],
+    image: '',
+    price: [
+      '',
+      [
+        Validators.required,
+        Validators.pattern(/^\d+$/),
+        Validators.minLength(3),
+      ],
+    ],
+    numberInStock: [
+      '',
+      [
+        Validators.required,
+        Validators.pattern(/^\d+$/),
+        Validators.minLength(1),
+      ],
+    ],
+  });
 
   add: boolean = true;
 
@@ -18,8 +42,29 @@ export class PhoneFormComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private phoneService: PhoneService
-  ) {}
+    private phoneService: PhoneService,
+    @Inject(AppStore) private store: Store<AppState>
+  ) {
+    store.subscribe(() => this.readState());
+    this.readState();
+  }
+  readState() {
+    const state: AppState = this.store.getState() as AppState;
+
+    if (state.counter <= 0) {
+      state.counter = 0;
+    }
+
+    this.phoneForm.get('numberInStock').setValue(state.counter);
+  }
+
+  inc() {
+    this.store.dispatch(CounterActions.increment());
+  }
+
+  dec() {
+    this.store.dispatch(CounterActions.decrement());
+  }
 
   ngOnInit(): void {
     // Init form group

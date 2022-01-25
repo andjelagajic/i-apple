@@ -84,6 +84,12 @@
           : ""
       }}
     </div>
+    <button type="button" (click)="dec()" class="btn btn-warning btn-sm me-2">
+      Manje
+    </button>
+    <button type="button" (click)="inc()" class="btn btn-warning btn-sm">
+      Više
+    </button>
   </div>
   <button
     *ngIf="this.add"
