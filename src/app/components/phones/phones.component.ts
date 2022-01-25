@@ -1,4 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  DoCheck,
+  OnChanges,
+  AfterContentInit,
+  AfterContentChecked,
+  AfterViewInit,
+  AfterViewChecked,
+} from '@angular/core';
 import { Phone } from 'src/app/models/phone';
 import { PhoneService } from 'src/app/services/phone.service';
 
@@ -6,7 +16,17 @@ import { PhoneService } from 'src/app/services/phone.service';
   selector: 'app-phones',
   templateUrl: './phones.component.html',
 })
-export class PhonesComponent implements OnInit {
+export class PhonesComponent
+  implements
+    OnInit,
+    OnDestroy,
+    DoCheck,
+    OnChanges,
+    AfterContentInit,
+    AfterContentChecked,
+    AfterViewInit,
+    AfterViewChecked
+{
   phones: Phone[] = [];
 
   searchValue: string; // for search [(ngModel)]
@@ -16,6 +36,8 @@ export class PhonesComponent implements OnInit {
   constructor(private phoneService: PhoneService) {}
 
   ngOnInit(): void {
+    console.log('ngOnInit()');
+
     // Subscribe to stateClear
     this.phoneService.stateClear.subscribe((clear) => {
       if (clear) {
@@ -71,5 +93,33 @@ export class PhonesComponent implements OnInit {
     console.log(
       `Ukupna cena: ${n}*${phone.price}=${this.phoneService.getPrice(n, phone)}`
     );
+  }
+
+  ngOnDestroy() {
+    console.log('ngOnDestroy()');
+  }
+
+  ngDoCheck() {
+    console.log('ngDoCheck()');
+  }
+
+  ngOnChanges() {
+    console.log('ngOnChanges()');
+  }
+
+  ngAfterContentInit() {
+    console.log('ngAfterContentInit()');
+  }
+
+  ngAfterContentChecked() {
+    console.log('ngAfterContentChecked()');
+  }
+
+  ngAfterViewInit() {
+    console.log('ngAfterViewInit()');
+  }
+
+  ngAfterViewChecked() {
+    console.log('ngAfterViewChecked()');
   }
 }
