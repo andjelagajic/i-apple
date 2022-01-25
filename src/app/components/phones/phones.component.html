@@ -17,9 +17,12 @@
 
 <div class="row row-cols-3 mt-5">
   <div class="col" *ngFor="let phone of phones | filter: this.searchValue">
-    <div class="card shadow" [ngClass]="{
-      'bg-secondary': this.selectedPhone === phone
-    }">
+    <div
+      class="card shadow"
+      [ngClass]="{
+        'bg-secondary': this.selectedPhone === phone
+      }"
+    >
       <div class="card-body">
         <div class="row">
           <div class="col-5">
@@ -46,6 +49,18 @@
                 >
                   Delete
                 </button>
+              </div>
+            </div>
+            <div class="row mt-4">
+              <div class="col">
+                <div class="d-grid">
+                  <button
+                    (click)="onBuy(phone)"
+                    class="btn btn-sm btn-outline-success"
+                  >
+                    Buy
+                  </button>
+                </div>
               </div>
             </div>
           </div>

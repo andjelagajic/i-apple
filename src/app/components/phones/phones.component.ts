@@ -63,4 +63,13 @@ export class PhonesComponent implements OnInit {
       this.searchValue = old;
     }, 1);
   }
+
+  onBuy(phone: Phone) {
+    const n: number = +window.prompt('How many?');
+
+    console.log('Phone: ', phone);
+    console.log(
+      `Ukupna cena: ${n}*${phone.price}=${this.phoneService.getPrice(n, phone)}`
+    );
+  }
 }

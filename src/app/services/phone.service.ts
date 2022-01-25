@@ -103,4 +103,8 @@ export class PhoneService {
     this.stateSource = new BehaviorSubject<boolean>(true);
     this.stateClear = this.stateSource.asObservable();
   }
+
+  getPrice(kolicina: number, phone: Phone) {
+    return kolicina * phone.price;
+  }
 }
