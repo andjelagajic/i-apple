@@ -48,6 +48,7 @@ export class PhoneService {
     this.phones = [phone1, phone2, phone3];
   }
 
+  // Integrisanje pregleda soba kroz poglede
   getPhones() {
     return of(this.phones);
   }
